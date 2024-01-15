@@ -1,3 +1,7 @@
+:root {
+    --duration: 0.7s;
+    --diameter: 80px;
+}
 body {
     width: 100vw;
     height: 100vh;
@@ -15,27 +19,33 @@ body {
 
 .digit {
     display: grid;
-    grid-template-columns: 60px 60px 60px;
+    grid-template-columns: var(--diameter) var(--diameter) var(--diameter);
     gap: 5px;
 }
 
+.separator {
+    display: grid;
+    gap: 5px;
+}
+
+
 .clock {
     border-radius: 50%;
-    height: 60px;
-    width: 60px;
-    border: 1px solid black;
+    box-shadow: inset 2px 2px 4px lightgray;
+    height: var(--diameter);
+    width: var(--diameter);
+    border: 1px solid darkgray;
     position: relative;
 }
 
 .hand {
-    width: 3%;
-    border: 1px solid black;
+    width:5%;
     background-color: black;
     position: absolute;
     top: 50%;
     left: 50%;
     transform-origin: top center;
-    transition: transform 3s linear;
+    transition: transform var(--duration) ease-in-out;
 }
 .hour-hand {
     height: 30%;

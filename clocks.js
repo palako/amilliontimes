@@ -80,62 +80,57 @@ const nine = "\
 
 const shapes = [zero, one, two, three, four, five, six, seven, eight, nine];
 
-function handPositions(c) {
+const m = new Map();
+m['┌'] = "--h: 0deg; --m: -90deg";//9484
+m['-'] = "--h: 90deg; --m: -90deg";//45
+m['┐'] = "--h: 90deg; --m: 0deg";//9488
+m['└'] = "--h: 180deg; --m: -90deg";//9492
+m['|'] = "--h: 0deg; --m: 180deg";//124
+m['┘'] = "--h: 90deg; --m: 180deg"//9496
+m['┬'] = "--h: 0deg; --m: 0deg"//9516
+m['┴'] = "--h: 180deg; --m: -180deg"//9524
+m['/'] = "--h: 45deg; --m: 45deg"// 47
 
-    m = new Map();
-    m['9484'] = "--h: 0deg; --m: -90deg";//┌
-    m['45'] = "--h: 90deg; --m: -90deg";//-
-    m['9488'] = "--h: 90deg; --m: 0deg";//┐
-    m['9492'] = "--h: 180deg; --m: -90deg";//└
-    m['124'] = "--h: 0deg; --m: 180deg";//|
-    m['9496'] = "--h: 90deg; --m: 180deg"//┘
-    m['9516'] = "--h: 0deg; --m: 0deg"//┬
-    m['9524'] = "--h: 180deg; --m: -180deg"//┴
-    m['47'] = "--h: 45deg; --m: 45deg"// /
+var timer = null;
 
-    
+function handPositions(c) {    
     return(m[c]);
 }
 
-function time() {
-    // const handPositions = [];
-    // handPositions[0] = "--h: 0deg; --m: -90deg";
-    // handPositions[1] = "--h: 90deg; --m: -90deg";
-    // handPositions[2] = "--h: 90deg; --m: 0deg";
-    // handPositions[3] = "--h: 180deg; --m: -90deg";
-    // handPositions[4] = "--h: 90deg; --m: 0deg";
-    // handPositions[5] = "--h: 0deg; --m: 180deg";
-    // handPositions[6] = "--h: 0deg; --m: -90deg";
-    // handPositions[7] = "--h: 90deg; --m: 180deg";
-    // handPositions[8] = "--h: 0deg; --m: 180deg";
-    // handPositions[9] = "--h: 0deg; --m: 180deg";
-    // handPositions[10] = "--h: 0deg; --m: -90deg";
-    // handPositions[11] = "--h: 90deg; --m: 180deg";
-    // handPositions[12] = "--h: 180deg; --m: 0deg";
-    // handPositions[13] = "--h: 180deg; --m: -90deg";
-    // handPositions[14] = "--h: 90deg; --m: 0deg";
-    // handPositions[15] = "--h: 180deg; --m: -90deg";
-    // handPositions[16] = "--h: 90deg; --m: -90deg";
-    // handPositions[17] = "--h: 90deg; --m: 180deg";
-
+function digits() {
     const clocks = document.querySelectorAll(".clock");
     clocks.forEach((clock) => {
         if(clock.dataset.pos) {
             const digit = clock.parentElement.dataset.digit;
-            clock.style = handPositions(shapes[digit].charCodeAt(clock.dataset.pos));
+            clock.style = handPositions(shapes[digit][clock.dataset.pos]);//.charCodeAt(clock.dataset.pos));
+        } else {
+            clock.style = handPositions('/');
         }
     });
 }
 
 function random() {
-    
+    clearInterval(timer);
     const clocks = document.querySelectorAll(".clock");
     clocks.forEach((clock) => {
         const h = Math.random() * 360;
         const m = Math.random() * 360;
         clock.style = "--h: "+h+"deg; --m: "+m+"deg";
-        
     });
+}
+
+function time() {
+    const d = new Date();
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const s = d.getSeconds();
+    document.getElementById("h0").dataset.digit = Math.floor(h/10);
+    document.getElementById("h1").dataset.digit = h % 10;
+    document.getElementById("m0").dataset.digit = Math.floor(m/10);
+    document.getElementById("m1").dataset.digit = m % 10;
+    document.getElementById("s0").dataset.digit = Math.floor(s/10)
+    document.getElementById("s1").dataset.digit = s % 10;
+    digits();
 }
 
 function addDigit(digitId, value) {
@@ -148,7 +143,7 @@ function addDigit(digitId, value) {
     for (i=0; i < two.length; i++) {
         const clock = document.createElement('div');
         clock.className="clock";
-        clock.style = handPositions(shapes[value].charCodeAt(i));
+        clock.style = handPositions(shapes[value][i]);//.charCodeAt(i)
         clock.dataset.pos = i;
         const hourHand = document.createElement('div');
         hourHand.className = "hand hour-hand";
@@ -160,17 +155,36 @@ function addDigit(digitId, value) {
     }
 }
 
+function addSeparator(sepId) {
+    const digits = document.getElementById('digits');
+    const sep = document.createElement('div');
+    sep.id = sepId;
+    sep.className="separator";
+    digits.appendChild(sep);
+    for (i=0; i < 6; i++) {
+        const clock = document.createElement('div');
+        clock.className="clock";
+        clock.style = handPositions('/');
+        const hourHand = document.createElement('div');
+        hourHand.className = "hand hour-hand";
+        const minuteHand = document.createElement('div');
+        minuteHand.className = "hand minute-hand";
+        clock.appendChild(hourHand);
+        clock.appendChild(minuteHand);
+        sep.appendChild(clock);
+    }
+}
+
 function main() {
-    addDigit("digit0", 0);
-    addDigit("digit1", 1);
-    addDigit("digit2", 2);
-    addDigit("digit3", 3);
-    addDigit("digit4", 4);
-    addDigit("digit5", 5);
-    addDigit("digit6", 6);
-    addDigit("digit7", 7);
-    addDigit("digit8", 8);
-    addDigit("digit9", 9);
+    addDigit("h0", 0);
+    addDigit("h1", 1);
+    addSeparator("sep0");
+    addDigit("m0", 2);
+    addDigit("m1", 3);
+    addSeparator("sep1");
+    addDigit("s0", 4);
+    addDigit("s1", 5);
+    timer = setInterval(time, 1000);
 }
 
 window.onload = main;
