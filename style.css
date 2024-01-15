@@ -1,0 +1,52 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    padding: 0px;
+}
+
+#digits {
+    display: inline-flex;
+    gap: 5px;
+    margin: 20px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.digit {
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    gap: 5px;
+}
+
+.clock {
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    border: 1px solid black;
+    position: relative;
+}
+
+.hand {
+    width: 3%;
+    border: 1px solid black;
+    background-color: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: top center;
+    transition: transform 3s linear;
+}
+.hour-hand {
+    height: 30%;
+    transform: rotate(var(--h));
+}
+
+.minute-hand {
+    height: 40%;
+    transform: rotate(var(--m));
+}
+
+footer {
+    margin: 10px;
+}
